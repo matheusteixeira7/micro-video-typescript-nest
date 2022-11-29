@@ -1,3 +1,4 @@
+import Entity from "#seedwork/domain/entity/entity";
 import { UniqueEntityId } from "../../../../@seedwork/domain/value-objects";
 
 export type CategoryProperties = {
@@ -7,11 +8,14 @@ export type CategoryProperties = {
     created_at?: Date;
 };
 
-export class Category {
-    public readonly id: UniqueEntityId;
+type UpdateCategoryProperties = {
+    name: string;
+    description: string;
+};
 
+export class Category extends Entity<CategoryProperties> {
     constructor(readonly props: CategoryProperties, id?: UniqueEntityId) {
-        this.id = id || new UniqueEntityId();
+        super(props, id);
         this.description = props.description;
         this.props.is_active = props.is_active ?? true;
         this.props.created_at = props.created_at ?? new Date();
@@ -37,11 +41,34 @@ export class Category {
         return this.props.is_active;
     }
 
+    deactivate() {
+        this.props.is_active = false;
+    }
+
+    activate() {
+        this.props.is_active = true;
+    }
+
     private set is_active(value: boolean) {
         this.props.is_active = value ?? true;
     }
 
     get created_at(): Date {
         return this.props.created_at;
+    }
+
+    update({ name, description }: UpdateCategoryProperties) {
+        this.name = name;
+        this.description = description;
+    }
+
+    toJSON(): Required<{ id: string } & CategoryProperties> {
+        return {
+            id: this.id.toString(),
+            name: this.name,
+            description: this.description,
+            is_active: this.is_active,
+            created_at: this.created_at,
+        };
     }
 }
