@@ -1,4 +1,5 @@
-import Entity from "#seedwork/domain/entity/entity";
+import Entity from "../../../../@seedwork/domain/entity/entity";
+import { ValidatorRules } from "../../../../@seedwork/domain/validators";
 import { UniqueEntityId } from "../../../../@seedwork/domain/value-objects";
 
 export type CategoryProperties = {
@@ -15,6 +16,7 @@ type UpdateCategoryProperties = {
 
 export class Category extends Entity<CategoryProperties> {
     constructor(readonly props: CategoryProperties, id?: UniqueEntityId) {
+        Category.validate(props);
         super(props, id);
         this.description = props.description;
         this.props.is_active = props.is_active ?? true;
@@ -41,14 +43,6 @@ export class Category extends Entity<CategoryProperties> {
         return this.props.is_active;
     }
 
-    deactivate() {
-        this.props.is_active = false;
-    }
-
-    activate() {
-        this.props.is_active = true;
-    }
-
     private set is_active(value: boolean) {
         this.props.is_active = value ?? true;
     }
@@ -57,9 +51,24 @@ export class Category extends Entity<CategoryProperties> {
         return this.props.created_at;
     }
 
+    deactivate() {
+        this.props.is_active = false;
+    }
+
+    activate() {
+        this.props.is_active = true;
+    }
+
     update({ name, description }: UpdateCategoryProperties) {
+        Category.validate({ name, description });
         this.name = name;
         this.description = description;
+    }
+
+    static validate(props: Omit<CategoryProperties, "created_at">) {
+        ValidatorRules.values(props.name, "name").required().string();
+        ValidatorRules.values(props.description, "description").string();
+        ValidatorRules.values(props.is_active, "is_active").boolean();
     }
 
     toJSON(): Required<{ id: string } & CategoryProperties> {

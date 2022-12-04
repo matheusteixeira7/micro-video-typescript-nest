@@ -1,5 +1,5 @@
-import { InvalidUuidError } from "./../../errors";
-import UniqueEntityId from "./../unique-entity-id.vo";
+import { InvalidUuidError } from "../../errors";
+import { UniqueEntityId } from "./../unique-entity-id.vo";
 import { validate } from "uuid";
 
 const spyValidateMethod = jest.spyOn(
