@@ -10,11 +10,6 @@ export type CategoryProperties = {
     created_at?: Date;
 };
 
-type UpdateCategoryProperties = {
-    name: string;
-    description: string;
-};
-
 export class Category extends Entity<CategoryProperties> {
     constructor(readonly props: CategoryProperties, id?: UniqueEntityId) {
         Category.validate(props);
