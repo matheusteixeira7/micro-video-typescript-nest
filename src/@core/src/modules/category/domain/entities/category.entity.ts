@@ -19,12 +19,22 @@ export class Category extends Entity<CategoryProperties> {
         this.props.created_at = props.created_at ?? new Date();
     }
 
+    activate() {
+        this.props.is_active = true;
+    }
+
     deactivate() {
         this.props.is_active = false;
     }
 
-    activate() {
-        this.props.is_active = true;
+    toJSON(): Required<{ id: string } & CategoryProperties> {
+        return {
+            id: this.id.toString(),
+            name: this.name,
+            description: this.description,
+            is_active: this.is_active,
+            created_at: this.created_at,
+        };
     }
 
     update(name: string, description: string): void {
@@ -42,16 +52,6 @@ export class Category extends Entity<CategoryProperties> {
         if (!isValid) {
             throw new EntityValidationError(validator.errors);
         }
-    }
-
-    toJSON(): Required<{ id: string } & CategoryProperties> {
-        return {
-            id: this.id.toString(),
-            name: this.name,
-            description: this.description,
-            is_active: this.is_active,
-            created_at: this.created_at,
-        };
     }
 
     get name(): string {
