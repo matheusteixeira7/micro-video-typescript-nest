@@ -24,5 +24,8 @@
     "bugs": {
         "url": "https://github.com/codeedu/micro-admin-videos-typescript/issues"
     },
-    "homepage": "https://github.com/codeedu/micro-admin-videos-typescript#readme"
+    "homepage": "https://github.com/codeedu/micro-admin-videos-typescript#readme",
+    "dependencies": {
+        "class-validator": "^0.13.2"
+    }
 }

@@ -1,6 +1,7 @@
+import { EntityValidationError } from "../../../../@seedwork/domain/errors";
 import Entity from "../../../../@seedwork/domain/entity/entity";
-import { ValidatorRules } from "../../../../@seedwork/domain/validators";
 import { UniqueEntityId } from "../../../../@seedwork/domain/value-objects";
+import { CategoryValidatorFactory } from "../validators/category.validator";
 
 export type CategoryProperties = {
     name: string;
@@ -21,6 +22,41 @@ export class Category extends Entity<CategoryProperties> {
         this.description = props.description;
         this.props.is_active = props.is_active ?? true;
         this.props.created_at = props.created_at ?? new Date();
+    }
+
+    deactivate() {
+        this.props.is_active = false;
+    }
+
+    activate() {
+        this.props.is_active = true;
+    }
+
+    update(name: string, description: string): void {
+        Category.validate({
+            name,
+            description,
+        });
+        this.name = name;
+        this.description = description;
+    }
+
+    static validate(props: CategoryProperties) {
+        const validator = CategoryValidatorFactory.create();
+        const isValid = validator.validate(props);
+        if (!isValid) {
+            throw new EntityValidationError(validator.errors);
+        }
+    }
+
+    toJSON(): Required<{ id: string } & CategoryProperties> {
+        return {
+            id: this.id.toString(),
+            name: this.name,
+            description: this.description,
+            is_active: this.is_active,
+            created_at: this.created_at,
+        };
     }
 
     get name(): string {
@@ -49,35 +85,5 @@ export class Category extends Entity<CategoryProperties> {
 
     get created_at(): Date {
         return this.props.created_at;
-    }
-
-    deactivate() {
-        this.props.is_active = false;
-    }
-
-    activate() {
-        this.props.is_active = true;
-    }
-
-    update({ name, description }: UpdateCategoryProperties) {
-        Category.validate({ name, description });
-        this.name = name;
-        this.description = description;
-    }
-
-    static validate(props: Omit<CategoryProperties, "created_at">) {
-        ValidatorRules.values(props.name, "name").required().string();
-        ValidatorRules.values(props.description, "description").string();
-        ValidatorRules.values(props.is_active, "is_active").boolean();
-    }
-
-    toJSON(): Required<{ id: string } & CategoryProperties> {
-        return {
-            id: this.id.toString(),
-            name: this.name,
-            description: this.description,
-            is_active: this.is_active,
-            created_at: this.created_at,
-        };
     }
 }
