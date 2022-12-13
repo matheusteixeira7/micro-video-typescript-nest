@@ -6,8 +6,8 @@ import {
     IsBoolean,
     IsDate,
 } from "class-validator";
-import { ClassValidatorFields } from "../../../../@seedwork/domain/validators/class-validator-fields";
-import { CategoryProperties } from "../entities/category.entity";
+import { ClassValidatorFields } from "#seedwork/domain/validators/class-validator-fields";
+import { CategoryProperties } from "#modules/category/domain/entities/category.entity";
 
 export class CategoryRules {
     @MaxLength(255)

@@ -1,5 +1,5 @@
 import { omit } from "lodash";
-import { UniqueEntityId } from "../../../../../@seedwork/domain/value-objects";
+import { UniqueEntityId } from "#seedwork/domain/value-objects";
 import { Category, CategoryProperties } from "../category.entity";
 
 describe("Category Unit Tests", () => {
